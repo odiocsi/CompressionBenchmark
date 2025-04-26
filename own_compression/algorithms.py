@@ -1,4 +1,3 @@
-import time
 def lz78_encode_ints(data):
     dictionary = {}
     indices = []
@@ -12,68 +11,60 @@ def lz78_encode_ints(data):
             current = combined
         else:
             if current == []:
-                indices.append(0)  # No prefix, just a fresh character
+                indices.append(0)
             else:
-                indices.append(dictionary[tuple(current)])  # Existing prefix index
-            values.append(num)  # Current character value
-            dictionary[tuple(combined)] = index  # Add new combination to dictionary
+                indices.append(dictionary[tuple(current)])
+            values.append(num)
+            dictionary[tuple(combined)] = index
             index += 1
-            current = []  # Reset current prefix
+            current = []
 
     if current:
         indices.append(dictionary[tuple(current)])
-        values.append(0)  # No new value after this (for an empty string case)
+        values.append(0)
     return indices, values
 
 def lz78_decode_ints(indices, values):
-    dictionary = {0: []}  # Initial empty string mapped to 0
+    dictionary = {0: []}
     result = []
 
     for idx, value in zip(indices, values):
-        # Get the prefix from the dictionary, append the current value
         entry = dictionary[idx] + [value]
-        result.extend(entry)  # Extend result with the current entry
-        dictionary[len(dictionary)] = entry  # Add new entry to dictionary
+        result.extend(entry)
+        dictionary[len(dictionary)] = entry
 
     return result
 
+import time
 class TrieNode:
-    def __init__(self):
+    def __init__(self, index = 0):
         self.children = {}
-        self.index = 0
+        self.index = index
 
 def lz78_encode_chars(text):
-    start = time.time()
     root = TrieNode()
     indices = []
     characters = []
     current_node = root
     index = 1
 
-    i = 0
-    while i < len(text):
-        ch = text[i]
+    for ch in text:
         if ch in current_node.children:
             current_node = current_node.children[ch]
-            i += 1
-        else:
-            indices.append(current_node.index)
-            characters.append(ch)
-            new_node = TrieNode()
-            new_node.index = index
-            current_node.children[ch] = new_node
-            index += 1
-            current_node = root
-            i += 1
+            continue
+        indices.append(current_node.index)
+        characters.append(ch)
+        current_node.children[ch] = TrieNode(index)
+        index += 1
+        current_node = root
 
-    # If there’s leftover text in a node
     if current_node != root:
         indices.append(current_node.index)
         characters.append('')
 
-    end = time.time()
-    print(f"Optimized LZ78: {end - start:.6f} seconds")
     return indices, characters
+
+
 
 def lz78_decode_chars(indices, characters):
     dictionary = ['']

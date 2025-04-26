@@ -1,16 +1,12 @@
-from collections import Counter
-from mpmath import mp
-from concurrent.futures import ThreadPoolExecutor
 from functools import lru_cache
-from mpmath import mp
 import numpy as np
-from decimal import Decimal, getcontext
+import gmpy2
+from gmpy2 import mpfr, get_context
 
 class ArithmeticEncoder:
     def __init__(self):
-        mp.dps = 1300
         self.__chunk_size = 1000
-
+        gmpy2.get_context().precision = 5000
 
     def __calculate_probabilities(self, data):
         arr = np.array(list(data))
@@ -21,11 +17,11 @@ class ArithmeticEncoder:
 
     @lru_cache(maxsize=2048)
     def get_symbol_ranges(self, prob_tuple):
-        cumulative = mp.mpf(0)
+        cumulative = mpfr(0)
         ranges = {}
 
         for symbol, p in prob_tuple:
-            p_mpf = mp.mpf(p)
+            p_mpf = mpfr(p)
             symbol_low = cumulative
             symbol_high = cumulative + p_mpf
             ranges[symbol] = (symbol_low, symbol_high)
@@ -34,14 +30,14 @@ class ArithmeticEncoder:
         return ranges
 
     def __arithmetic_encoder(self, data, prob):
-        low = mp.mpf(0)
-        high = mp.mpf(1)
+        low = mpfr(0)
+        high = mpfr(1)
 
         sorted_prob = tuple(sorted(prob.items()))
+        base_ranges = self.get_symbol_ranges(sorted_prob)
         for char in data:
             range_width = high - low
 
-            base_ranges = self.get_symbol_ranges(sorted_prob)
             symbol_low, symbol_high = base_ranges[char]
 
             low = low + range_width * symbol_low
@@ -56,7 +52,7 @@ class ArithmeticEncoder:
         ranges = {}
 
         for symbol, p in prob_tuple:
-            p_mpf = mp.mpf(p)
+            p_mpf = mpfr(p)
             symbol_low = cumulative
             symbol_high = cumulative + p_mpf * range_width
             ranges[symbol] = (symbol_low, symbol_high)
@@ -65,9 +61,9 @@ class ArithmeticEncoder:
         return ranges
 
     def __arithmetic_decoder(self, num, prob, length):
-        num = mp.mpf(num)
-        low = mp.mpf(0)
-        high = mp.mpf(1)
+        num = mpfr(num)
+        low = mpfr(0)
+        high = mpfr(1)
         output = ""
 
         sorted_prob = tuple(sorted(prob.items()))
@@ -91,7 +87,6 @@ class ArithmeticEncoder:
         chunks = self.__split_data(data)
 
         encoded_chunks = []
-        decoded_chunks = []
         prob_tables = []
         chunk_sizes = []
         for chunk in chunks:
@@ -118,25 +113,3 @@ class ArithmeticEncoder:
         decoded_data = ''.join(decoded_chunks)
 
         return decoded_data
-"""
-    def __arithmetic_encoder(self, data, prob):
-        low = mp.mpf(0)
-        high = mp.mpf(1)
-
-        sorted_prob = sorted(prob.items())
-        for char in data:
-            range_width = high - low
-            cumulative = low
-            ranges = {}
-
-            for symbol, p in sorted_prob:
-                p_mpf = mp.mpf(p)
-                symbol_low = cumulative
-                symbol_high = cumulative + p_mpf * range_width
-                ranges[symbol] = (symbol_low, symbol_high)
-                cumulative = symbol_high
-
-            low, high = ranges[char]
-
-        return (low + high) / 2
-"""

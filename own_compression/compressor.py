@@ -1,8 +1,7 @@
 import own_compression.arithmetic as ar
 import own_compression.algorithms as alg
-from mpmath import mpf
 import numpy as np
-from decimal import Decimal, getcontext
+from gmpy2 import mpfr, get_context
 
 class Compressor:
     def __init__(self):
@@ -27,7 +26,6 @@ class Compressor:
         decoded = list(decoded)
         decoded_indicies = alg.delta_decode(encoded_indicies)
         decoded.append('')
-
 
         decoded_text = alg.lz78_decode_chars(decoded_indicies, decoded).replace("\\n", "\n")
 
