@@ -2,6 +2,11 @@
 __pycache__/
 *.py[cod]
 *$py.class
+compressed_files/
+own_compression/build
+own_compression/algr.pyx
+own_compression/arith.pyx
+own_compresion/setup.py
 
 own_compression/__pycache__/
 
