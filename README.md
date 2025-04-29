@@ -1,3 +1,5 @@
+This project is the benchmarking of two well known compressing algorithms, zstd and gzip. I also implemented my own algorithm to expand my knowledge on the topic.  
+
 # Benchmarking Compression Algorithms: Zstandard, Gzip, and a Custom Hybrid Method
 
 ## Introduction
@@ -7,8 +9,6 @@ Data compression is crucial for efficient storage and transmission of large data
 - **Compression Ratio**: Original size / Compressed size
 - **Compression Time**
 - **Decompression Time**
-
-The results are illustrated with representative graphs throughout the report.
 
 ## System Specifications
 
