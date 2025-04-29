@@ -2,7 +2,9 @@
 __pycache__/
 *.py[cod]
 *$py.class
-compressed_files/
+compressed_files/*
+!compressed_files/
+
 own_compression/build
 own_compression/algr.pyx
 own_compression/arith.pyx
