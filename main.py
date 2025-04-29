@@ -203,6 +203,6 @@ for filename in os.listdir("text_files"):
         decompression_times.append([gzip_time_decompress, zstd_time_decompress, own_time_decompress])
         filenames.append(filename)
 
-plot_compression_ratios(compression_ratios, filenames, "output/compression_ratios.png")
-plot_compression_times(compression_times, filenames, "output/compression_times.png")
-plot_decompression_times(decompression_times, filenames, "output/decompression_times.png")
+plot_compression_ratios(compression_ratios, filenames, "graphs/compression_ratios.png")
+plot_compression_times(compression_times, filenames, "graphs/compression_times.png")
+plot_decompression_times(decompression_times, filenames, "graphs/decompression_times.png")
