@@ -1,5 +1,3 @@
-This project is the benchmarking of two well known compressing algorithms, zstd and gzip. I also implemented my own algorithm to expand my knowledge on the topic.  
-
 # Benchmarking Compression Algorithms: Zstandard, Gzip, and a Custom Hybrid Method
 
 ## Introduction
